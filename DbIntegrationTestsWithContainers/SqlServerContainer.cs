@@ -1,22 +1,22 @@
-using System;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
-using Polly;
-using TestContainers.Core.Containers;
-
 namespace DbIntegrationTestsWithContainers
 {
+    using System;
+    using System.Data.SqlClient;
+    using System.Threading.Tasks;
+    using Polly;
+    using TestContainers.Core.Containers;
+
     public sealed class SqlServerContainer : DatabaseContainer
     {
-        private string _databaseName = "master";
-        private string _userName = "sa";
-        private string _password = "Password123";
+        private string databaseName = "master";
+        private string userName = "sa";
+        private string password = "Password123";
 
-        public override string DatabaseName => base.DatabaseName ?? _databaseName;
+        public override string DatabaseName => base.DatabaseName ?? databaseName;
 
-        public override string UserName => base.UserName ?? _userName;
+        public override string UserName => base.UserName ?? userName;
 
-        public override string Password => base.Password ?? _password;
+        public override string Password => base.Password ?? password;
 
         public override string ConnectionString => $"Data Source={GetDockerHostIpAddress()};Initial Catalog={DatabaseName};User ID={UserName};Password={Password}";
 
@@ -39,7 +39,7 @@ namespace DbIntegrationTestsWithContainers
                     await connection.OpenAsync();
 
                     var cmd = new SqlCommand(TestQueryString, connection);
-                    var reader = (await cmd.ExecuteScalarAsync());
+                    await cmd.ExecuteScalarAsync();
                 });
 
             if (result.Outcome == OutcomeType.Failure)
